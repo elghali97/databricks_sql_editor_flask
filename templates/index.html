@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Flask SQL Studio{% endblock %}
+{% block content %}
+<div class="col-6">
+    <h1>Databricks SQL Studio</h1>
+    <p>Insert a Databricks SQL query in the box below and click the button to execute.</p>
+    <p>Please note, only valid <code>SELECT</code> statements are supported.</p>
+</div>
+<div class="w-100"></div>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+<div class="col-8">
+    {% for category, message in messages %}
+    <div class="alert {{ category }} alert-dismissible fade show" role="alert">
+        {{ message }}
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+<div class="w-100"></div>
+{% endif %}
+{% endwith %}
+<div class="col-6">
+    <form method="POST" action="/" class="query-box">
+        {{ form.csrf_token }}
+        <div class="input-group">
+            {{ form.sql(class_="form-control", rows="5") }}
+        </div>
+        <br>
+        <div class="d-grid gap-2 md-flex justify-content-md-end">
+            <button class="btn btn-primary float-right" type="submit">Execute</button>
+        </div>
+    </form>
+</div>
+{% if table %}
+<div class="col-12">
+    <hr>
+    <h3 class="d-inline-block">Results</h3>
+    <!-- <button class="btn btn-sm btn-outline-secondary d-inline pl-1.5"> -->
+    <a href="/download" class="badge badge-light">
+        <i class="bi bi-download d-inline"></i>
+    </a>
+    <!-- </button> -->
+    <br>
+    <div class="table-responsive">
+        {{ table|safe }}
+    </div>
+</div>
+{% endif %}
+{% endblock %}
